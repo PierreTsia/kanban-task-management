@@ -31,6 +31,7 @@
   },
   "dependencies": {
     "@fontsource/plus-jakarta-sans": "^4.5.9",
+    "@supabase/supabase-js": "^1.35.6",
     "prettier": "^2.7.1",
     "uno-preset-dark-theme": "^0.0.6",
     "yarn": "^1.22.19"

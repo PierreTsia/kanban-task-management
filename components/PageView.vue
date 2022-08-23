@@ -1,13 +1,32 @@
 <script setup lang="ts">
-const { data } = await useFetch('/api/pageview')
+import { storeToRefs } from 'pinia'
+import { useBoardsStore } from '~/store/boards.store'
 
-const time = useTimeAgo(computed(() => data.value.startAt))
+const boardsStore = useBoardsStore()
+const { sortedTasksByColumnId, activeBoardColumns } = storeToRefs(boardsStore)
+onMounted(() => {
+  boardsStore.getAllBoards()
+})
 </script>
 
 <template>
   <div class="flex flex-col max-w-1000px mx-auto gap-4">
-    <h1 class="heading heading-xl">Extra Large</h1>
-    <h2 class="heading heading-lg">Large</h2>
+    <div v-for="column in activeBoardColumns" :key="`col-${column.id}`">
+      <h1 class="heading heading-xl p-4 text-primary-dark">
+        {{ column.name }}
+      </h1>
+      <div
+        v-for="task in sortedTasksByColumnId(column.id)"
+        :key="`task-${task.id}`">
+        <h2 class="heading heading-lg p-2 text-black-dark dark:text-gray-light">
+          {{ task.title }}
+        </h2>
+        <div v-for="subtask in task.subtasks" :key="`subtask-${subtask.id}`">
+          <h3 class="heading heading-sm text-gray-dark px-2">{{ subtask.title }}</h3>
+        </div>
+      </div>
+    </div>
+
     <h3 class="heading heading-md">Medium</h3>
     <h4 class="heading heading-sm">Small</h4>
     <span class="paragraph paragraph-lg">
