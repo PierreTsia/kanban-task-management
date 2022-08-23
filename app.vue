@@ -1,9 +1,14 @@
-<script setup>
+<script lang="ts" setup>
 useHead({
-  title: 'Vitesse Nuxt 3',
+  title: 'Kanban Task Management',
+  htmlAttrs: {
+    lang: 'en',
+  },
   link: [
     {
-      rel: 'icon', type: 'image/png', href: '/nuxt.png',
+      rel: 'icon',
+      type: 'image/png',
+      href: '/assets/favicon-32x32.png',
     },
   ],
 })
@@ -11,12 +16,14 @@ useHead({
 
 <template>
   <NuxtLayout>
-    <NuxtPage />
+    <NuxtPage class="font-jakarta" />
   </NuxtLayout>
 </template>
 
 <style>
-html, body , #__nuxt{
+html,
+body,
+#__nuxt {
   height: 100vh;
   margin: 0;
   padding: 0;
