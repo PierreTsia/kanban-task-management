@@ -4,8 +4,8 @@ import { useAppStore } from '~/store/app.store'
 import { useBoardsStore } from '~/store/boards.store'
 
 const boardsStore = useBoardsStore()
+const { activeBoard } = storeToRefs(boardsStore)
 const appStore = useAppStore()
-const { sortedTasksByColumnId, activeBoardColumns } = storeToRefs(boardsStore)
 const { isSideBarOpen } = storeToRefs(appStore)
 
 await boardsStore.getAllBoards()
@@ -23,7 +23,24 @@ await boardsStore.getAllBoards()
     </Transition>
 
     <SideBar class="w-0 hidden md:flex" :is-open="isSideBarOpen" />
-    <div class="flex-1 flex items-center justify-center">Content</div>
+    <div class="flex-1 flex flex-col justify-start items-center w-full">
+      <aside
+        class="w-full h-96px flex justify-between items-center px-8 md:border-b-1 border-b-gray-light dark:border-b-black-light">
+        <h1 class="heading heading-xl">{{ activeBoard?.name }}</h1>
+        <section class="inline-flex items-center gap-x-4">
+          <button class="btn btn-lg btn-primary w-175px">
+            <IconsPlus class="mr-1" />
+
+            Add New Task
+          </button>
+          <IconsVerticalEllipsis class="text-gray-dark hover:text-primary-light cursor-pointer" />
+        </section>
+      </aside>
+      <div
+        class="w-full flex items-center justify-center flex-1 bg-gray-light dark:bg-black-dark">
+        test
+      </div>
+    </div>
   </div>
 </template>
 
