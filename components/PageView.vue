@@ -4,9 +4,8 @@ import { useBoardsStore } from '~/store/boards.store'
 
 const boardsStore = useBoardsStore()
 const { sortedTasksByColumnId, activeBoardColumns } = storeToRefs(boardsStore)
-onMounted(() => {
-  boardsStore.getAllBoards()
-})
+
+await boardsStore.getAllBoards()
 </script>
 
 <template>
@@ -22,7 +21,9 @@ onMounted(() => {
           {{ task.title }}
         </h2>
         <div v-for="subtask in task.subtasks" :key="`subtask-${subtask.id}`">
-          <h3 class="heading heading-sm text-gray-dark px-2">{{ subtask.title }}</h3>
+          <h3 class="heading heading-sm text-gray-dark px-2">
+            {{ subtask.title }}
+          </h3>
         </div>
       </div>
     </div>

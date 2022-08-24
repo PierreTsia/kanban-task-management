@@ -1,4 +1,6 @@
 <script lang="ts" setup>
+import { useAppStore } from '~/store/app.store'
+
 useHead({
   title: 'Kanban Task Management',
   htmlAttrs: {
@@ -12,6 +14,8 @@ useHead({
     },
   ],
 })
+
+
 </script>
 
 <template>
