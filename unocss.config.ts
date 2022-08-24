@@ -13,7 +13,7 @@ export default defineConfig({
   shortcuts: [
     [
       'btn',
-      'px-4 py-1 text-white rounded-full inline-block cursor-pointer disabled:cursor-default disabled:opacity-50 min-w-255px',
+      'px-4 py-1 text-white rounded-full inline-flex items-center justify-center cursor-pointer disabled:cursor-default disabled:opacity-50',
     ],
     ['btn-primary', 'bg-primary-dark hover:bg-primary-light'],
     [
