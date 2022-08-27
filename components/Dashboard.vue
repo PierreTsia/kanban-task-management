@@ -194,7 +194,7 @@ const handleUpdateOrder = (type: string) => {
 
 .drag-zone::-webkit-scrollbar-thumb {
   background: #a7a4ff;
-  border-radius: 100vh;
+  border-radius: 100px;
   border: 1px solid #2b2c37;
 }
 
