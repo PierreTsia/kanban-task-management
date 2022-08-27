@@ -15,7 +15,7 @@ const { isDarkMode } = storeToRefs(appStore)
     class="z-index-12 overflow-hidden transition-all"
     :class="
       isOpen
-        ? 'w-full md:w-260px lg:w-300px md:border-r-1 border-r-gray-light dark:border-r-black-light'
+        ? 'md:min-w-260px lg:min-w-300px md:border-r-1 border-r-gray-light dark:border-r-black-light'
         : ['w-0', 'pl-0']
     ">
     <div v-if="isOpen" class="w-full flex flex-col flex-1">

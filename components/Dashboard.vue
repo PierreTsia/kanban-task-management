@@ -2,6 +2,7 @@
 import debounce from 'lodash/debounce'
 import type { Ref } from 'vue'
 import { storeToRefs } from 'pinia'
+import { useElementSize, useWindowSize } from '@vueuse/core'
 import { useAppStore } from '~/store/app.store'
 import { useBoardsStore } from '~/store/boards.store'
 import type {
@@ -14,15 +15,34 @@ import type {
 } from '~/composables/api'
 import { isColumn } from '~/composables/api'
 
+const sideBar = ref(null)
+const { width } = useWindowSize()
+const { width: sidebarWidth } = useElementSize(sideBar)
+
+const BORDERS_SIZE = 2
+const scrollZoneWidth = computed(
+    () => `${width.value - sidebarWidth.value - BORDERS_SIZE}px`
+)
+
+
 const boardsStore = useBoardsStore()
 const { activeBoard, activeBoardColumns, sortedActiveBoardColumns } =
   storeToRefs(boardsStore)
+
 const appStore = useAppStore()
 const { isSideBarOpen } = storeToRefs(appStore)
 
 await boardsStore.getAllBoards()
 
 const columns: Ref<OrderList> = ref(sortedActiveBoardColumns.value)
+
+watch(
+  () => activeBoard.value,
+  async () => {
+    columns.value = sortedActiveBoardColumns.value
+  },
+  { deep: true }
+)
 
 const getPayload = (cols: ColumnDto[]) => {
   return cols.reduce((acc, column, index, arr) => {
@@ -101,7 +121,7 @@ const handleUpdateOrder = (type: string) => {
 </script>
 
 <template>
-  <div class="w-full h-screen flex flex-start relative">
+  <div class="w-full h-screen flex justify-start relative">
     <Transition name="slide-fade">
       <button
         v-show="!isSideBarOpen"
@@ -111,26 +131,34 @@ const handleUpdateOrder = (type: string) => {
       </button>
     </Transition>
 
-    <SideBar class="w-0 hidden md:flex" :is-open="isSideBarOpen" />
-    <div class="flex-1 flex flex-col justify-start items-center w-full">
+    <SideBar
+      ref="sideBar"
+      class="w-0 hidden md:flex"
+      :is-open="isSideBarOpen" />
+    <div class="flex-1 flex flex-col justify-center items-start w-full">
       <aside
         class="w-full h-96px flex justify-between items-center px-8 md:border-b-1 border-b-gray-light dark:border-b-black-light">
         <h1 class="heading heading-xl">{{ activeBoard?.name }}</h1>
         <section class="inline-flex items-center gap-x-4">
           <button class="heading heading-md btn btn-lg btn-primary w-175px">
             <IconsPlus class="mr-1" />
-            Add New Task
+            Create new task
           </button>
           <IconsVerticalEllipsis
             class="text-gray-dark hover:text-primary-light cursor-pointer" />
         </section>
       </aside>
+
       <div
-        class="w-full flex flex-col items-center justify-center flex-1 bg-gray-light dark:bg-black-dark">
-        <NoColumnsView v-if="!activeBoardColumns.length" />
-        <NestedDraggable
-          :items="columns"
-          @on-items-updated="handleUpdateOrder" />
+        class="scroller flex flex-col items-start justify-start flex-1 bg-gray-light dark:bg-black-dark">
+        <NoColumnsView v-if="!activeBoardColumns.length" class="my-auto" />
+        <client-only>
+          <NestedDraggable
+            v-if="columns.length"
+            :items="columns"
+            class="drag-zone w-full overflow-auto"
+            @on-items-updated="handleUpdateOrder" />
+        </client-only>
       </div>
     </div>
   </div>
@@ -149,5 +177,10 @@ const handleUpdateOrder = (type: string) => {
 .slide-fade-leave-to {
   transform: translateX(-20px);
   opacity: 0;
+}
+
+.scroller {
+  width: v-bind(scrollZoneWidth);
+  overflow: auto;
 }
 </style>
