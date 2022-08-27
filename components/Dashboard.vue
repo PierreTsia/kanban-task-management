@@ -21,9 +21,8 @@ const { width: sidebarWidth } = useElementSize(sideBar)
 
 const BORDERS_SIZE = 2
 const scrollZoneWidth = computed(
-    () => `${width.value - sidebarWidth.value - BORDERS_SIZE}px`
+  () => `${width.value - sidebarWidth.value - BORDERS_SIZE}px`
 )
-
 
 const boardsStore = useBoardsStore()
 const { activeBoard, activeBoardColumns, sortedActiveBoardColumns } =
@@ -182,5 +181,32 @@ const handleUpdateOrder = (type: string) => {
 .scroller {
   width: v-bind(scrollZoneWidth);
   overflow: auto;
+}
+.drag-zone::-webkit-scrollbar {
+  width: 20px;
+  height: 10px;
+}
+
+.drag-zone::-webkit-scrollbar-track {
+  border-radius: 100px;
+  background: #20212c;
+}
+
+.drag-zone::-webkit-scrollbar-thumb {
+  background: #a7a4ff;
+  border-radius: 100vh;
+  border: 1px solid #2b2c37;
+}
+
+.drag-zone::-webkit-scrollbar-thumb:hover {
+  background: #645fc7;
+}
+
+.light .drag-zone::-webkit-scrollbar-thumb {
+  border-color: #a7a4ff;
+}
+
+.light .drag-zone::-webkit-scrollbar-track {
+  background: #f4f7fd;
 }
 </style>

@@ -14,8 +14,6 @@ useHead({
     },
   ],
 })
-
-
 </script>
 
 <template>
@@ -37,4 +35,6 @@ html.dark {
   background: #2b2c37;
   color: #ffffff;
 }
+
+
 </style>
