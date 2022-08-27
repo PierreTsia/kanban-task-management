@@ -1,5 +1,11 @@
 import { defineStore } from 'pinia'
-import type { BoardDto, ColumnDto, OrderList } from '~/composables/api'
+import type {
+  BoardDto,
+  ColumnDto,
+  OrderList,
+  UpdateColumnOrderPayload,
+  UpdateTaskOrderPayload,
+} from '~/composables/api'
 import { useApi } from '~/composables/api'
 
 interface State {
@@ -21,6 +27,14 @@ export const useBoardsStore = defineStore('boards', {
     },
     setActiveBoardId(id: number | null) {
       this.activeBoardId = id
+    },
+    async updateBoardColumnsOrder(payload: UpdateColumnOrderPayload[]) {
+      const { updateBoardColumnsOrder: updateOrder } = useApi()
+      await updateOrder(payload)
+    },
+    async updateTasksOrder(payload: UpdateTaskOrderPayload[]) {
+      const { updateTasksOrder: updateOrder } = useApi()
+      await updateOrder(payload)
     },
   },
   getters: {
