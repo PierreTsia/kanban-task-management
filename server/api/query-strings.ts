@@ -14,6 +14,7 @@ export const ALL_BOARDS = `
             id,
             title,
             description,
+            created_at,
             ${PREVIOUS_AND_NEXT_IDS},
             subtasks(
                 id,

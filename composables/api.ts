@@ -31,10 +31,32 @@ export interface BoardDto {
 interface BoardsComposition {
   fetchAllBoards: () => Promise<BoardDto[] | undefined>
   orderChainedList: (l: OrderList, o?: OrderList) => OrderList
+  updateBoardColumnsOrder: (p: UpdateColumnOrderPayload[]) => any
+  updateTasksOrder: (p: UpdateTaskOrderPayload[]) => any
 }
 
 export type OrderListItem = TaskDto | ColumnDto
 export type OrderList = Array<OrderListItem>
+
+export const isColumn = (b: OrderListItem): b is ColumnDto => {
+  return (b as ColumnDto).tasks !== undefined
+}
+
+export interface UpdateColumnOrderPayload {
+  id: number
+  previous: number | null
+  next: number | null
+  name: string
+  board: number
+}
+
+export interface UpdateTaskOrderPayload {
+  id: number
+  previous: number | null
+  next: number | null
+  title: string
+  column: number
+}
 
 const useBoards = (): BoardsComposition => {
   const orderChainedList = (
@@ -78,9 +100,47 @@ const useBoards = (): BoardsComposition => {
     }
   }
 
+  const updateBoardColumnsOrder = async (
+    payload: UpdateColumnOrderPayload[]
+  ) => {
+    try {
+      const { data, error } = await $fetch('/api/update-columns', {
+        method: 'PUT',
+        body: payload,
+      })
+
+      if (error) {
+        throw new Error(error.message)
+      } else {
+        return data
+      }
+    } catch (e) {
+      console.error(e)
+    }
+  }
+
+  const updateTasksOrder = async (payload: UpdateTaskOrderPayload[]) => {
+    try {
+      const { data, error } = await $fetch('/api/update-tasks', {
+        method: 'PUT',
+        body: payload,
+      })
+
+      if (error) {
+        throw new Error(error.message)
+      } else {
+        return data
+      }
+    } catch (e) {
+      console.error(e)
+    }
+  }
+
   return {
     fetchAllBoards,
     orderChainedList,
+    updateBoardColumnsOrder,
+    updateTasksOrder,
   }
 }
 

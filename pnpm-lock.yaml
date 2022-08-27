@@ -9,6 +9,7 @@ specifiers:
   '@nuxtjs/color-mode': ^3.1.4
   '@pinia/nuxt': ^0.3.1
   '@supabase/supabase-js': ^1.35.6
+  '@types/lodash': ^4.14.184
   '@unocss/nuxt': ^0.45.4
   '@vitejs/plugin-vue': ^3.0.3
   '@vue/test-utils': ^2.0.2
@@ -17,19 +18,23 @@ specifiers:
   eslint: ^8.21.0
   eslint-config-prettier: ^8.5.0
   jsdom: ^20.0.0
+  lodash: ^4.17.21
   nuxt: ^3.0.0-rc.6
   pinia: ^2.0.17
   prettier: ^2.7.1
   typescript: ^4.7.4
   uno-preset-dark-theme: ^0.0.6
   vitest: ^0.5.1
+  vuedraggable: ^4.1.0
   yarn: ^1.22.19
 
 dependencies:
   '@fontsource/plus-jakarta-sans': 4.5.9
   '@supabase/supabase-js': 1.35.6
+  lodash: 4.17.21
   prettier: 2.7.1
   uno-preset-dark-theme: 0.0.6
+  vuedraggable: 4.1.0
   yarn: 1.22.19
 
 devDependencies:
@@ -39,6 +44,7 @@ devDependencies:
   '@nuxt/test-utils-edge': 3.0.0-rc.8-27687584.51dc736
   '@nuxtjs/color-mode': 3.1.4
   '@pinia/nuxt': 0.3.1_typescript@4.7.4
+  '@types/lodash': 4.14.184
   '@unocss/nuxt': 0.45.4
   '@vitejs/plugin-vue': 3.0.3
   '@vue/test-utils': 2.0.2
@@ -1222,6 +1228,10 @@ packages:
 
   /@types/json5/0.0.29:
     resolution: {integrity: sha512-dRLjCWHYg4oaA77cxO64oO+7JwCwnIzkZPdrrC71jQmQtlhM556pwKo5bUzqvZndkVbeFLIIi+9TC40JNF5hNQ==}
+    dev: true
+
+  /@types/lodash/4.14.184:
+    resolution: {integrity: sha512-RoZphVtHbxPZizt4IcILciSWiC6dcn+eZ8oX9IWEYfDMcocdd42f7NPI6fQj+6zI8y4E0L7gu2pcZKLGTRaV9Q==}
     dev: true
 
   /@types/mdast/3.0.10:
@@ -4746,7 +4756,6 @@ packages:
 
   /lodash/4.17.21:
     resolution: {integrity: sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==}
-    dev: true
 
   /log-symbols/4.1.0:
     resolution: {integrity: sha512-8XPvpAA8uyhfteu8pIvQxpJZ7SYYdpUivZpGy6sFsBuKRY/7rQGavedeB8aK+Zkyq6upMFVL/9AW6vOYzfRyLg==}
@@ -6476,6 +6485,10 @@ packages:
       is-fullwidth-code-point: 3.0.0
     dev: true
 
+  /sortablejs/1.14.0:
+    resolution: {integrity: sha512-pBXvQCs5/33fdN1/39pPL0NZF20LeRbLQ5jtnheIPN9JQAaufGjKdWduZn4U7wCtVuzKhmRkI0DFYHYRbB2H1w==}
+    dev: false
+
   /source-map-js/1.0.2:
     resolution: {integrity: sha512-R0XvVJ9WusLiqTCEiGCmICCMplcCkIwwR11mOSD9CR5u+IXYdiseeEuXCVAjS54zqwkLcPNnmU4OeJ6tUrWhDw==}
     engines: {node: '>=0.10.0'}
@@ -7654,6 +7667,14 @@ packages:
       '@vue/server-renderer': 3.2.37_vue@3.2.37
       '@vue/shared': 3.2.37
     dev: true
+
+  /vuedraggable/4.1.0:
+    resolution: {integrity: sha512-FU5HCWBmsf20GpP3eudURW3WdWTKIbEIQxh9/8GE806hydR9qZqRRxRE3RjqX7PkuLuMQG/A7n3cfj9rCEchww==}
+    peerDependencies:
+      vue: ^3.0.1
+    dependencies:
+      sortablejs: 1.14.0
+    dev: false
 
   /w3c-hr-time/1.0.2:
     resolution: {integrity: sha512-z8P5DvDNjKDoFIHK7q8r8lackT6l+jo/Ye3HOle7l9nICP9lf1Ci25fy9vHd0JOWewkIFzXIEig3TdKT7JQ5fQ==}
