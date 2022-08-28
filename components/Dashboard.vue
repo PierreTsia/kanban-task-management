@@ -43,6 +43,8 @@ watch(
   { deep: true }
 )
 
+const isDialogShown = ref(false)
+
 const getPayload = (cols: ColumnDto[]) => {
   return cols.reduce((acc, column, index, arr) => {
     const item: UpdateColumnOrderPayload = {
@@ -120,7 +122,7 @@ const handleUpdateOrder = (type: string) => {
 </script>
 
 <template>
-  <div class="w-full h-screen flex justify-start relative">
+  <div class="w-full flex justify-start relative">
     <Transition name="slide-fade">
       <button
         v-show="!isSideBarOpen"
@@ -134,9 +136,10 @@ const handleUpdateOrder = (type: string) => {
       ref="sideBar"
       class="w-0 hidden md:flex"
       :is-open="isSideBarOpen" />
-    <div class="flex-1 flex flex-col justify-center items-start w-full">
+    <div
+      class="flex-1 flex flex-col justify-center items-start w-full max-h-screen">
       <aside
-        class="w-full h-96px flex justify-between items-center px-8 md:border-b-1 border-b-gray-light dark:border-b-black-light">
+        class="w-full h-96px flex justify-between items-center px-8 py-4 md:border-b-1 border-b-gray-light dark:border-b-black-light">
         <h1 class="heading heading-xl">{{ activeBoard?.name }}</h1>
         <section class="inline-flex items-center gap-x-4">
           <button class="heading heading-md btn btn-lg btn-primary w-175px">
@@ -148,14 +151,20 @@ const handleUpdateOrder = (type: string) => {
         </section>
       </aside>
 
+      <!--      <button class="btn btn-primary" @click="isDialogShown = !isDialogShown">
+        Show
+      </button> -->
+      <CreateBoardDialog v-model="isDialogShown" />
+
       <div
-        class="scroller flex flex-col items-start justify-start flex-1 bg-gray-light dark:bg-black-dark">
+        class="scroller flex flex-col items-start justify-start bg-gray-light dark:bg-black-dark h-3000px">
         <NoColumnsView v-if="!activeBoardColumns.length" class="my-auto" />
+
         <client-only>
           <NestedDraggable
             v-if="columns.length"
             :items="columns"
-            class="drag-zone w-full overflow-auto"
+            class="drag-zone overflow-auto min-h-[calc(100vh-94px)]"
             @on-items-updated="handleUpdateOrder" />
         </client-only>
       </div>
@@ -163,7 +172,7 @@ const handleUpdateOrder = (type: string) => {
   </div>
 </template>
 
-<style scoped>
+<style>
 .slide-fade-enter-active {
   transition: all 0.3s ease-out;
 }
@@ -182,31 +191,31 @@ const handleUpdateOrder = (type: string) => {
   width: v-bind(scrollZoneWidth);
   overflow: auto;
 }
-.drag-zone::-webkit-scrollbar {
-  width: 20px;
-  height: 10px;
+.scroller::-webkit-scrollbar {
+  width: 10px !important;
+  height: 10px !important;
 }
 
-.drag-zone::-webkit-scrollbar-track {
+.scroller::-webkit-scrollbar-track {
   border-radius: 100px;
   background: #20212c;
 }
 
-.drag-zone::-webkit-scrollbar-thumb {
+.scroller::-webkit-scrollbar-thumb {
   background: #a7a4ff;
   border-radius: 100px;
   border: 1px solid #2b2c37;
 }
 
-.drag-zone::-webkit-scrollbar-thumb:hover {
-  background: #645fc7;
+.scroller::-webkit-scrollbar-thumb:hover {
+  background: #645fc7 !important;
 }
 
-.light .drag-zone::-webkit-scrollbar-thumb {
+.light .scroller::-webkit-scrollbar-thumb {
   border-color: #a7a4ff;
 }
 
-.light .drag-zone::-webkit-scrollbar-track {
+.light .scroller::-webkit-scrollbar-track {
   background: #f4f7fd;
 }
 </style>
