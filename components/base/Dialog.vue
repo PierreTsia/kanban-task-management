@@ -38,7 +38,10 @@ useDOMScrollLock(toRef(props, 'modelValue'))
         v-show="modelValue"
         class="dialog-wrapper grid z-1 uno-layer-base-place-items-center fixed uno-layer-base-inset-0 bg-black-dark bg-opacity-70">
         <Transition name="scale">
-          <div v-show="modelValue" ref="refCard" class="dark:bg-black-medium rounded-lg">
+          <div
+            v-show="modelValue"
+            ref="refCard"
+            class="bg-white dark:bg-black-medium rounded-lg shadow-lg">
             <slot
               class="z-10 backface-hidden transform translate-z-0 max-w-[calc(100vw-2rem)]"
               :model-value="modelValue"

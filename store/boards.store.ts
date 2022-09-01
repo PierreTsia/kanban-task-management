@@ -2,6 +2,7 @@ import { defineStore } from 'pinia'
 import type {
   BoardDto,
   ColumnDto,
+  CreateBoardPayload,
   OrderList,
   UpdateColumnOrderPayload,
   UpdateTaskOrderPayload,
@@ -24,6 +25,11 @@ export const useBoardsStore = defineStore('boards', {
     async getAllBoards() {
       const { fetchAllBoards } = useApi()
       this.boards = (await fetchAllBoards()) ?? []
+    },
+    async createBoard(board: CreateBoardPayload) {
+      const { createNewBoard } = useApi()
+      const newBoard = await createNewBoard(board)
+      this.boards.push(newBoard)
     },
     setActiveBoardId(id: number | null) {
       this.activeBoardId = id

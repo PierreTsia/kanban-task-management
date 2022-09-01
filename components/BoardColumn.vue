@@ -16,7 +16,7 @@ const getBackgroundColor = (stringInput: string) => {
 </script>
 
 <template>
-  <div class="w-280px cursor-grab">
+  <div class="w-330px cursor-grab">
     <h1
       class="inline-flex items-center justify-start w-full pl-6 py-2 heading heading-sm uppercase text-gray-dark">
       <span

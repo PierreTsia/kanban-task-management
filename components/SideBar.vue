@@ -8,6 +8,8 @@ withDefaults(defineProps<{ isOpen: boolean }>(), {
 
 const appStore = useAppStore()
 const { isDarkMode } = storeToRefs(appStore)
+
+
 </script>
 
 <template>
