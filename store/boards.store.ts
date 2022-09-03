@@ -18,13 +18,14 @@ export const useBoardsStore = defineStore('boards', {
   state: (): State => {
     return {
       boards: [],
-      activeBoardId: 1,
+      activeBoardId: 0,
     }
   },
   actions: {
     async getAllBoards() {
       const { fetchAllBoards } = useApi()
       this.boards = (await fetchAllBoards()) ?? []
+      this.activeBoardId = this.boards.length ? this.boards[0].id : null
     },
     async createBoard(board: CreateBoardPayload) {
       const { createNewBoard } = useApi()
@@ -41,6 +42,12 @@ export const useBoardsStore = defineStore('boards', {
     async updateTasksOrder(payload: UpdateTaskOrderPayload[]) {
       const { updateTasksOrder: updateOrder } = useApi()
       await updateOrder(payload)
+    },
+    async deleteBoardById(id: number) {
+      const { deleteBoard } = useApi()
+      await deleteBoard(id)
+      this.boards = this.boards.filter((b) => b.id !== id)
+      this.activeBoardId = this.boards.length ? this.boards[0].id : null
     },
   },
   getters: {

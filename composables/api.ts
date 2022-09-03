@@ -39,6 +39,7 @@ interface BoardsComposition {
   updateBoardColumnsOrder: (p: UpdateColumnOrderPayload[]) => any
   updateTasksOrder: (p: UpdateTaskOrderPayload[]) => any
   createNewBoard: (p: CreateBoardPayload) => any
+  deleteBoard: (id: number) => Promise<BoardDto[] | undefined>
 }
 
 export type OrderListItem = TaskDto | ColumnDto
@@ -62,6 +63,7 @@ export interface UpdateTaskOrderPayload {
   next: number | null
   title: string
   column: number
+  description: string
 }
 
 const useBoards = (): BoardsComposition => {
@@ -122,6 +124,21 @@ const useBoards = (): BoardsComposition => {
     }
   }
 
+  const deleteBoard = async (id: number) => {
+    try {
+      // @ts-expect-error for some reason TS does not infer properly [id] params
+      const { data, error } = await $fetch(`/api/board/${id}`, {
+        method: 'DELETE',
+      })
+      if (error) {
+        throw new Error(error.message)
+      }
+      return data as BoardDto[]
+    } catch (e) {
+      console.error(e)
+    }
+  }
+
   const updateBoardColumnsOrder = async (
     payload: UpdateColumnOrderPayload[]
   ) => {
@@ -164,6 +181,7 @@ const useBoards = (): BoardsComposition => {
     updateBoardColumnsOrder,
     updateTasksOrder,
     createNewBoard,
+    deleteBoard,
   }
 }
 

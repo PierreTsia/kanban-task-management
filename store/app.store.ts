@@ -5,6 +5,12 @@ import { useColorMode } from '#imports'
 interface State {
   isSideBarOpen: boolean
   color: ColorModeInstance
+  dialogs: {
+    createBoard: boolean
+    createColumn: boolean
+    createTask: boolean
+    deleteBoard: boolean
+  }
 }
 
 export const useAppStore = defineStore('app', {
@@ -14,6 +20,12 @@ export const useAppStore = defineStore('app', {
     return {
       isSideBarOpen: true,
       color,
+      dialogs: {
+        createBoard: false,
+        createColumn: false,
+        createTask: false,
+        deleteBoard: false,
+      },
     }
   },
   actions: {
@@ -26,5 +38,12 @@ export const useAppStore = defineStore('app', {
   },
   getters: {
     isDarkMode: (state): boolean => state.color.value === 'dark',
+    isDialogOpen() {
+      return (
+        dialogName: 'createBoard' | 'deleteBoard' | 'createColumn' | 'createTask'
+      ): boolean => {
+        return this.dialogs[dialogName]
+      }
+    },
   },
 })
