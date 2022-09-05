@@ -68,7 +68,7 @@ export interface UpdateTaskOrderPayload {
   previous: number | null
   next: number | null
   title: string
-  column: number
+  status: number
   description: string
 }
 
