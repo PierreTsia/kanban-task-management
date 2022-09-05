@@ -78,8 +78,6 @@ const handleEditBoard = () => {
         <IconsEyeOpened class="text-white" />
       </button>
     </Transition>
-
-    <pre class="absolute">{{ dialogs.upsertBoard }}</pre>
     <SideBar
       ref="sideBar"
       class="w-0 hidden md:flex"
