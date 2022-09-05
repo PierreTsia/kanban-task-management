@@ -6,7 +6,7 @@ interface State {
   isSideBarOpen: boolean
   color: ColorModeInstance
   dialogs: {
-    createBoard: boolean
+    upsertBoard: boolean
     createColumn: boolean
     createTask: boolean
     deleteBoard: boolean
@@ -21,7 +21,7 @@ export const useAppStore = defineStore('app', {
       isSideBarOpen: true,
       color,
       dialogs: {
-        createBoard: false,
+        upsertBoard: false,
         createColumn: false,
         createTask: false,
         deleteBoard: false,
@@ -40,7 +40,7 @@ export const useAppStore = defineStore('app', {
     isDarkMode: (state): boolean => state.color.value === 'dark',
     isDialogOpen() {
       return (
-        dialogName: 'createBoard' | 'deleteBoard' | 'createColumn' | 'createTask'
+        dialogName: 'upsertBoard' | 'deleteBoard' | 'createColumn' | 'createTask'
       ): boolean => {
         return this.dialogs[dialogName]
       }

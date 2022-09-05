@@ -1,11 +1,13 @@
 <script lang="ts" setup>
 const emit = defineEmits<{
   (e: 'deleteBoard'): void
+  (e: 'editBoard'): void
 }>()
 const contextualMenu = ref([
   {
     name: 'Edit Board',
     handler: (cb: Function) => {
+      emit('editBoard')
       cb()
     },
   },

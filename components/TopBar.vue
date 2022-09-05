@@ -2,6 +2,9 @@
 import { storeToRefs } from 'pinia'
 import { useBoardsStore } from '~/store/boards.store'
 import { useAppStore } from '~/store/app.store'
+defineEmits<{
+  (e: 'editBoard'): void
+}>()
 
 const boardsStore = useBoardsStore()
 const appStore = useAppStore()
@@ -19,7 +22,9 @@ const { activeBoard } = storeToRefs(boardsStore)
         Create new task
       </button>
 
-      <BoardContextualMenu @delete-board="dialogs.deleteBoard = true" />
+      <BoardContextualMenu
+        @delete-board="dialogs.deleteBoard = true"
+        @edit-board="$emit('editBoard')" />
     </section>
   </aside>
 </template>

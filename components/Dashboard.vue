@@ -18,8 +18,12 @@ const scrollZoneWidth = computed(
 )
 
 const boardsStore = useBoardsStore()
-const { activeBoard, activeBoardColumns, sortedActiveBoardColumns } =
+const { activeBoard, activeBoardColumns, sortedActiveBoardColumns, isEdited } =
   storeToRefs(boardsStore)
+
+const editedBoard = computed(() => {
+  return isEdited.value ? activeBoard.value : null
+})
 
 const appStore = useAppStore()
 const { isSideBarOpen, dialogs } = storeToRefs(appStore)
@@ -28,7 +32,7 @@ const { orderColumns, orderTasks } = useOrderedList()
 
 await boardsStore.getAllBoards()
 
-const columns: Ref<OrderList> = ref(sortedActiveBoardColumns.value)
+const columns: Ref<OrderList> = ref([...sortedActiveBoardColumns.value])
 
 watch(
   () => activeBoard.value,
@@ -47,12 +51,20 @@ const handleUpdateTasks = debounce(() => {
 }, 1000)
 
 const handleUpdateOrder = (type: string) => {
+  if (isEdited.value) {
+    return
+  }
   if (type === 'column') {
     const payload = orderColumns(columns.value as ColumnDto[])
     boardsStore.updateBoardColumnsOrder(payload)
   } else {
     handleUpdateTasks()
   }
+}
+
+const handleEditBoard = () => {
+  isEdited.value = true
+  dialogs.value.upsertBoard = true
 }
 </script>
 
@@ -67,15 +79,16 @@ const handleUpdateOrder = (type: string) => {
       </button>
     </Transition>
 
+    <pre class="absolute">{{ dialogs.upsertBoard }}</pre>
     <SideBar
       ref="sideBar"
       class="w-0 hidden md:flex"
       :is-open="isSideBarOpen" />
     <div
       class="flex-1 flex flex-col justify-center items-start w-full max-h-screen">
-      <TopBar />
-      <CreateBoardDialog v-model="dialogs.createBoard" />
-      <DeleteBoardDialog v-model="dialogs.deleteBoard" />
+      <TopBar @edit-board="handleEditBoard" />
+      <DialogsUpsertBoard v-model="dialogs.upsertBoard" :board="editedBoard" />
+      <DialogsDeleteBoard v-model="dialogs.deleteBoard" />
 
       <div
         class="scroller flex flex-col items-start justify-start bg-gray-light dark:bg-black-dark h-3000px">

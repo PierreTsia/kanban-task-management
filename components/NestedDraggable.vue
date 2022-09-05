@@ -43,10 +43,10 @@ const draggableComponent = computed(() => {
 <template>
   <div class="flex no-wrap flex-1  min-w-95% p-4">
     <Draggable
-      class="flex bg-gray-light dark:bg-black-dark"
+      class="flex  bg-gray-light dark:bg-black-dark"
       :class="{
-        'flex-row w-full justify-start': type === 'column',
-        'flex-col gap-y-4 p-4  min-h-[calc(100vh-125px)] flex-1 w-full cursor-grab':
+        'flex-row w-full flex-1 justify-start': type === 'column',
+        'flex-col gap-y-4 p-4  min-h-[calc(100vh-225px)] flex-1 w-full cursor-grab':
           type === 'task',
       }"
       tag="ul"
@@ -68,9 +68,9 @@ const draggableComponent = computed(() => {
         </div>
       </template>
     </Draggable>
-    <div v-if="type === 'column'" class="w-420px h-full pt-10 ml-auto px-4">
+    <div v-if="type === 'column'" class="w-320px h-full pt-12 ml-auto px-4">
       <div
-        class="cursor-pointer group w-full h-90% bg-gray-medium dark:bg-black-medium bg-opacity-80 hover:bg-opacity-100 rounded-lg flex items-center justify-center">
+        class="cursor-pointer group w-full h-90% bg-gray-medium dark:bg-black-medium bg-opacity-30 dark:bg-opacity-30 hover:bg-opacity-100 rounded-lg flex items-center justify-center">
         <h5
           class="heading heading-xl text-gray-dark group-hover:text-primary-dark inline-flex items-center">
           <IconsPlus class="" />

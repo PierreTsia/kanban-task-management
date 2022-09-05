@@ -4,6 +4,7 @@ import type {
   ColumnDto,
   CreateBoardPayload,
   OrderList,
+  UpdateBoardPayload,
   UpdateColumnOrderPayload,
   UpdateTaskOrderPayload,
 } from '~/composables/api'
@@ -11,7 +12,8 @@ import { useApi } from '~/composables/api'
 
 interface State {
   boards: BoardDto[]
-  activeBoardId: number | null
+  activeBoardId: number | null,
+  isEdited: boolean
 }
 
 export const useBoardsStore = defineStore('boards', {
@@ -19,6 +21,7 @@ export const useBoardsStore = defineStore('boards', {
     return {
       boards: [],
       activeBoardId: 0,
+      isEdited: false,
     }
   },
   actions: {
@@ -32,6 +35,13 @@ export const useBoardsStore = defineStore('boards', {
       const newBoard = await createNewBoard(board)
       this.boards.push(newBoard)
     },
+
+    async updateBoard(id: number, payload: UpdateBoardPayload) {
+      const { updateBoard: update } = useApi()
+      const updatedBoard = await update(id, payload)
+      this.boards = this.boards.map((b) => (b.id === id ? updatedBoard : b))
+    },
+
     setActiveBoardId(id: number | null) {
       this.activeBoardId = id
     },

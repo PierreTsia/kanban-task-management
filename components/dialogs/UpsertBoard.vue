@@ -1,11 +1,25 @@
 <script lang="ts" setup>
+import type {
+  BoardDto,
+  ColumnDto,
+  CreateBoardPayload,
+  UpdateBoardPayload,
+} from '~/composables/api'
 import { useInputValidation } from '~/composables/inputValidation'
 import { useBoardsStore } from '~/store/boards.store'
 
-withDefaults(defineProps<{ modelValue: boolean; persistent?: boolean }>(), {
-  modelValue: false,
-  persistent: false,
-})
+const props = withDefaults(
+  defineProps<{
+    modelValue: boolean
+    persistent?: boolean
+    board?: BoardDto | null
+  }>(),
+  {
+    modelValue: false,
+    persistent: false,
+    board: null,
+  }
+)
 
 const emit = defineEmits<{
   (e: 'update:modelValue', t: boolean): void
@@ -13,11 +27,30 @@ const emit = defineEmits<{
 
 const newBoard = reactive({
   name: '',
-  columns: [{ name: 'Todo' }],
+  columns: [{ name: 'Todo' } as Partial<ColumnDto>],
+} as CreateBoardPayload)
+
+watch(
+  () => props.board,
+  (board) => {
+    if (board) {
+      newBoard.name = board.name
+      newBoard.columns = board.columns
+    }
+  }
+)
+
+const title = computed(() => {
+  return props.board ? 'Edit board' : 'Create board'
 })
 
+const actionBtn = computed(() => {
+  return props.board ? 'Save changes' : 'Create new Board'
+})
 const { hasMinLength, hasMaxLength } = useInputValidation()
-const { createBoard } = useBoardsStore()
+const boardsStore = useBoardsStore()
+
+const deletedColumns = ref<BoardDto['columns']>([])
 
 const errorText = (value: string) => {
   return (
@@ -40,13 +73,29 @@ const handleCreateBoard = async () => {
     return
   }
 
-  const { name, columns } = newBoard
-  const boardPayload = { name, columns }
-  await createBoard(boardPayload)
+  if (!props.board) {
+    const { name, columns } = newBoard
+    const boardPayload: CreateBoardPayload = {
+      name,
+      columns,
+    }
+    await boardsStore.createBoard(boardPayload)
+  } else {
+    const boardId = props.board.id
+    const payload: UpdateBoardPayload = {
+      board: newBoard,
+      deleteColumns: deletedColumns.value.map((c) => c.id),
+    }
+    await boardsStore.updateBoard(boardId, payload)
+  }
+
   emit('update:modelValue', false)
 }
 
 const deleteColumn = (index: number) => {
+  if (newBoard.columns[index]?.id) {
+    deletedColumns.value.push(newBoard.columns[index] as ColumnDto)
+  }
   if (newBoard.columns.length <= 1) {
     newBoard.columns = [{ name: '' }]
   } else {
@@ -55,7 +104,11 @@ const deleteColumn = (index: number) => {
 }
 
 const canAddNewColumn = computed(() => {
-  return errorText(newBoard.columns[newBoard.columns.length - 1].name) === ''
+  return (
+    errorText(
+      (newBoard.columns[newBoard.columns.length - 1] as ColumnDto).name
+    ) === ''
+  )
 })
 </script>
 
@@ -65,10 +118,10 @@ const canAddNewColumn = computed(() => {
     :model-value="modelValue"
     :persistent="persistent"
     @update:model-value="(t) => $emit('update:modelValue', t)">
-    <div class="w-480px min-h-480px flex flex-col justify-start p-8">
+    <div class="w-480px min-h-400px flex flex-col justify-start p-8">
       <div class="w-full mb-5">
         <h1 class="heading heading-lg text-left dark:text-white">
-          Add new Board
+          {{ title }}
         </h1>
       </div>
       <form class="w-full flex-1 mb-4 py-4 flex-col">
@@ -99,9 +152,9 @@ const canAddNewColumn = computed(() => {
                 <BaseInputText
                   v-model="column.name"
                   :error-message="errorText(column.name)"
-                  class="w-8/10" />
+                  class="w-9/10" />
                 <span
-                  class="w-2/10 flex justify-center items-center cursor-pointer"
+                  class="w-1/10 flex justify-end items-center cursor-pointer pr-1"
                   @click="deleteColumn(i)">
                   <IconsCross class="flex text-gray-dark" />
                 </span>
@@ -112,7 +165,7 @@ const canAddNewColumn = computed(() => {
       </form>
       <button
         class="btn btn-secondary btn-sm mt-auto"
-        :class="canAddNewColumn ? 'cursor-pointer' : '!cursor-not-allowed'"
+        :class="[canAddNewColumn ? 'cursor-pointer' : '!cursor-not-allowed']"
         :disabled="!canAddNewColumn"
         @click="handleAddColumn">
         <span class="inline-flex items-center">
@@ -122,9 +175,10 @@ const canAddNewColumn = computed(() => {
       </button>
       <button
         class="btn btn-primary btn-sm mt-6"
+        :class="isFormValid ? 'cursor-pointer' : '!cursor-not-allowed'"
         :disabled="!isFormValid"
         @click="handleCreateBoard">
-        Create new board
+        {{ actionBtn }}
       </button>
     </div>
   </BaseDialog>

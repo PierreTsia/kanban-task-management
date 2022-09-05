@@ -1,7 +1,7 @@
 import { COLUMNS_QUERY } from '~/server/api/query-strings'
 import { supabase } from '~/server/db/supabase'
 
-interface ColumnPayload {
+export interface ColumnPayload {
   name: string
   board: number
   id?: number
@@ -9,7 +9,7 @@ interface ColumnPayload {
   next: number | null
 }
 
-const orderColumns = (columns: ColumnPayload[]) => {
+export const setPreviousNext = (columns: ColumnPayload[]) => {
   return columns.reduce((acc, curr, i, arr) => {
     const current: ColumnPayload = { ...curr, previous: null, next: null }
     if (i > 0) {
@@ -47,7 +47,7 @@ export default defineEventHandler(async (event) => {
   // order the columns
   const { data: orderedColumns, error: orderColumnsError } = await supabase
     .from('columns')
-    .update(orderColumns(unorderedCols as ColumnPayload[]))
+    .update(setPreviousNext(unorderedCols as ColumnPayload[]))
     .select(COLUMNS_QUERY)
 
   const error = createBoardError || createColumnsError || orderColumnsError
