@@ -2,11 +2,7 @@ const PREVIOUS_AND_NEXT_IDS = `
     previous(id),
     next(id)
  `
-export const ALL_BOARDS = `
-    id,
-    name,
-    created_at,
-    columns(
+export const COLUMNS_QUERY = `
         id,
         name,
         ${PREVIOUS_AND_NEXT_IDS},
@@ -22,5 +18,13 @@ export const ALL_BOARDS = `
                 is_completed
             )
         )
+        `
+
+export const ALL_BOARDS = `
+    id,
+    name,
+    created_at,
+    columns(
+        ${COLUMNS_QUERY}
     )
   `

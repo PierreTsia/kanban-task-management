@@ -18,7 +18,7 @@ export default defineConfig({
     ['btn-primary', 'bg-primary-dark hover:bg-primary-light'],
     [
       'btn-secondary',
-      'bg-primary-dark hover:bg-primary-light bg-opacity-10 text-primary-dark hover:bg-opacity-25 dark:bg-opacity-100 dark:bg-white',
+      'bg-primary-dark dark:bg-opacity-100 !dark:bg-white hover:bg-primary-light bg-opacity-10 text-primary-dark hover:bg-opacity-25 ',
     ],
     ['btn-destructive', 'bg-red-dark hover:bg-red-light'],
     ['btn-lg', 'h-48px '],

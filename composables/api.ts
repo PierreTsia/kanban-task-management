@@ -28,11 +28,24 @@ export interface BoardDto {
   columns: ColumnDto[]
 }
 
+export interface CreateBoardPayload {
+  name: string
+  columns: Partial<ColumnDto>[]
+}
+
+export interface UpdateBoardPayload {
+  deleteColumns: number[]
+  board: CreateBoardPayload
+}
+
 interface BoardsComposition {
   fetchAllBoards: () => Promise<BoardDto[] | undefined>
   orderChainedList: (l: OrderList, o?: OrderList) => OrderList
   updateBoardColumnsOrder: (p: UpdateColumnOrderPayload[]) => any
   updateTasksOrder: (p: UpdateTaskOrderPayload[]) => any
+  createNewBoard: (p: CreateBoardPayload) => any
+  deleteBoard: (id: number) => Promise<BoardDto[] | undefined>
+  updateBoard: (id: number, p: any) => Promise<BoardDto>
 }
 
 export type OrderListItem = TaskDto | ColumnDto
@@ -56,6 +69,7 @@ export interface UpdateTaskOrderPayload {
   next: number | null
   title: string
   column: number
+  description: string
 }
 
 const useBoards = (): BoardsComposition => {
@@ -100,6 +114,37 @@ const useBoards = (): BoardsComposition => {
     }
   }
 
+  const createNewBoard = async (payload: CreateBoardPayload) => {
+    try {
+      const { data, error } = await $fetch('/api/create-board', {
+        method: 'POST',
+        body: payload,
+      })
+      if (error) {
+        throw new Error(error.message)
+      } else {
+        return data as BoardDto[]
+      }
+    } catch (e) {
+      console.error(e)
+    }
+  }
+
+  const deleteBoard = async (id: number) => {
+    try {
+      // @ts-expect-error for some reason TS does not infer properly [id] params
+      const { data, error } = await $fetch(`/api/board/${id}`, {
+        method: 'DELETE',
+      })
+      if (error) {
+        throw new Error(error.message)
+      }
+      return data as BoardDto[]
+    } catch (e) {
+      console.error(e)
+    }
+  }
+
   const updateBoardColumnsOrder = async (
     payload: UpdateColumnOrderPayload[]
   ) => {
@@ -107,6 +152,24 @@ const useBoards = (): BoardsComposition => {
       const { data, error } = await $fetch('/api/update-columns', {
         method: 'PUT',
         body: payload,
+      })
+
+      if (error) {
+        throw new Error(error.message)
+      } else {
+        return data
+      }
+    } catch (e) {
+      console.error(e)
+    }
+  }
+
+  const updateBoard = async (id: number, p: UpdateBoardPayload) => {
+    try {
+      // @ts-expect-error for some reason TS does not infer properly [id] params
+      const { data, error } = await $fetch(`/api/board/${id}`, {
+        method: 'PUT',
+        body: p,
       })
 
       if (error) {
@@ -141,6 +204,9 @@ const useBoards = (): BoardsComposition => {
     orderChainedList,
     updateBoardColumnsOrder,
     updateTasksOrder,
+    createNewBoard,
+    deleteBoard,
+    updateBoard,
   }
 }
 

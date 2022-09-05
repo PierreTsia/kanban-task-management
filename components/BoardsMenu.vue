@@ -1,9 +1,18 @@
 <script lang="ts" setup>
 import { storeToRefs } from 'pinia'
 import { useBoardsStore } from '~/store/boards.store'
+import { useAppStore } from '~/store/app.store'
 
 const boardsStore = useBoardsStore()
-const { boards, activeBoardId } = storeToRefs(boardsStore)
+const { boards, activeBoardId, isEdited } = storeToRefs(boardsStore)
+
+const appStore = useAppStore()
+const { dialogs } = storeToRefs(appStore)
+
+const handleCreateClick = () => {
+  isEdited.value = false
+  dialogs.value.upsertBoard = true
+}
 </script>
 
 <template>
@@ -20,7 +29,7 @@ const { boards, activeBoardId } = storeToRefs(boardsStore)
         {{ board.name }}
       </BoardsMenuItem>
 
-      <BoardsMenuItem>
+      <BoardsMenuItem @click="handleCreateClick">
         <span class="inline-flex items-center">
           <IconsPlus class="mr-1" />
           Create new board

@@ -23,6 +23,12 @@ useHead({
 </template>
 
 <style>
+html.scroll-lock {
+  position: fixed;
+  overflow-y: scroll;
+  top: 0;
+  width: 100%;
+}
 html,
 body,
 #__nuxt {
@@ -35,6 +41,4 @@ html.dark {
   background: #2b2c37;
   color: #ffffff;
 }
-
-
 </style>
