@@ -4,13 +4,13 @@ import { useBoardsStore } from '~/store/boards.store'
 import { useAppStore } from '~/store/app.store'
 
 const boardsStore = useBoardsStore()
-const { boards, activeBoardId, isEdited } = storeToRefs(boardsStore)
+const { boards, activeBoardId, editedBoardId } = storeToRefs(boardsStore)
 
 const appStore = useAppStore()
 const { dialogs } = storeToRefs(appStore)
 
 const handleCreateClick = () => {
-  isEdited.value = false
+  editedBoardId.value = null
   dialogs.value.upsertBoard = true
 }
 </script>

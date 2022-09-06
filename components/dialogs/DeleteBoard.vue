@@ -25,7 +25,6 @@ const handleDelete = async () => {
 
 <template>
   <BaseDialog
-    v-slot="{ modelValue }"
     :model-value="modelValue"
     :persistent="persistent"
     @update:model-value="(t) => $emit('update:modelValue', t)">
@@ -35,7 +34,7 @@ const handleDelete = async () => {
       </h1>
       <span class="paragraph paragraph-lg text-gray-dark">
         Are you sure you want to delete the
-        <span class="font-bold text-primary-dark">{{ activeBoard.name }}</span>
+        <span class="font-bold text-primary-dark">{{ activeBoard?.name }}</span>
         board? This action will remove all columns and tasks and cannot be
         reversed.
       </span>

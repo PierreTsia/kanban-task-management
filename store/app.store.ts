@@ -13,6 +13,8 @@ interface State {
   }
 }
 
+type DialogName = keyof State['dialogs']
+
 export const useAppStore = defineStore('app', {
   state: (): State => {
     const color = useColorMode()
@@ -39,9 +41,7 @@ export const useAppStore = defineStore('app', {
   getters: {
     isDarkMode: (state): boolean => state.color.value === 'dark',
     isDialogOpen() {
-      return (
-        dialogName: 'upsertBoard' | 'deleteBoard' | 'createColumn' | 'createTask'
-      ): boolean => {
+      return (dialogName: DialogName): boolean => {
         return this.dialogs[dialogName]
       }
     },

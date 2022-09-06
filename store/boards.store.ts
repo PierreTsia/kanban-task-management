@@ -12,16 +12,16 @@ import { useApi } from '~/composables/api'
 
 interface State {
   boards: BoardDto[]
-  activeBoardId: number | null,
-  isEdited: boolean
+  activeBoardId: number | null
+  editedBoardId: number | null
 }
 
 export const useBoardsStore = defineStore('boards', {
   state: (): State => {
     return {
       boards: [],
-      activeBoardId: 0,
-      isEdited: false,
+      activeBoardId: null,
+      editedBoardId: null,
     }
   },
   actions: {
@@ -34,6 +34,24 @@ export const useBoardsStore = defineStore('boards', {
       const { createNewBoard } = useApi()
       const newBoard = await createNewBoard(board)
       this.boards.push(newBoard)
+    },
+
+    async createColumn(column: {
+      name: string
+      board: number
+      previous: number
+    }) {
+      const { createNewColumn } = useApi()
+      const columns: ColumnDto[] = await createNewColumn(column)
+      const boardIndex = this.boards.findIndex((b) => b.id === column.board)
+      if (boardIndex !== -1) {
+        this.boards[boardIndex].columns = [
+          ...this.boards[boardIndex].columns.filter(
+            (c) => c?.id !== column.previous
+          ),
+          ...columns,
+        ]
+      }
     },
 
     async updateBoard(id: number, payload: UpdateBoardPayload) {
@@ -64,12 +82,22 @@ export const useBoardsStore = defineStore('boards', {
     activeBoard(): BoardDto | null {
       return this.boards.find((b) => b.id === this.activeBoardId) ?? null
     },
+    editedBoard(): BoardDto | null {
+      return this.boards.find((b) => b.id === this.editedBoardId) ?? null
+    },
     activeBoardColumns(): ColumnDto[] {
       return this.activeBoard?.columns ?? []
     },
     sortedActiveBoardColumns(): OrderList {
       const { orderChainedList } = useApi()
       return orderChainedList(this.activeBoardColumns)
+    },
+    lastColumnId(): number | null {
+      return this.sortedActiveBoardColumns.length
+        ? this.sortedActiveBoardColumns[
+            this.sortedActiveBoardColumns.length - 1
+          ].id
+        : null
     },
     sortedTasksByColumnId() {
       const { orderChainedList } = useApi()
