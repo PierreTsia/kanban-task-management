@@ -38,6 +38,12 @@ export interface UpdateBoardPayload {
   board: CreateBoardPayload
 }
 
+export interface CreateColumnPayload {
+  name: string
+  board: number
+  previous: number
+}
+
 interface BoardsComposition {
   fetchAllBoards: () => Promise<BoardDto[] | undefined>
   orderChainedList: (l: OrderList, o?: OrderList) => OrderList
@@ -46,6 +52,7 @@ interface BoardsComposition {
   createNewBoard: (p: CreateBoardPayload) => any
   deleteBoard: (id: number) => Promise<BoardDto[] | undefined>
   updateBoard: (id: number, p: any) => Promise<BoardDto>
+  createNewColumn: (p: CreateColumnPayload) => Promise<ColumnDto[]>
 }
 
 export type OrderListItem = TaskDto | ColumnDto
@@ -122,9 +129,8 @@ const useBoards = (): BoardsComposition => {
       })
       if (error) {
         throw new Error(error.message)
-      } else {
-        return data as BoardDto[]
       }
+      return (data ?? []) as BoardDto[]
     } catch (e) {
       console.error(e)
     }
@@ -199,6 +205,24 @@ const useBoards = (): BoardsComposition => {
     }
   }
 
+  const createNewColumn = async (payload: CreateColumnPayload) => {
+    try {
+      const { data, error } = await $fetch('/api/create-column', {
+        method: 'POST',
+        body: payload,
+      })
+
+      if (error) {
+        throw new Error(error.message)
+      } else {
+        return data
+      }
+    } catch (e) {
+      console.error(e)
+      return []
+    }
+  }
+
   return {
     fetchAllBoards,
     orderChainedList,
@@ -207,6 +231,7 @@ const useBoards = (): BoardsComposition => {
     createNewBoard,
     deleteBoard,
     updateBoard,
+    createNewColumn,
   }
 }
 

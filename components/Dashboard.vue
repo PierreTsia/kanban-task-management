@@ -18,11 +18,16 @@ const scrollZoneWidth = computed(
 )
 
 const boardsStore = useBoardsStore()
-const { activeBoard, activeBoardColumns, sortedActiveBoardColumns, isEdited } =
-  storeToRefs(boardsStore)
+const {
+  activeBoard,
+  activeBoardColumns,
+  sortedActiveBoardColumns,
+  editedBoardId,
+  editedBoard,
+} = storeToRefs(boardsStore)
 
-const editedBoard = computed(() => {
-  return isEdited.value ? activeBoard.value : null
+const draftBoard = computed(() => {
+  return editedBoardId.value ? editedBoard.value : null
 })
 
 const appStore = useAppStore()
@@ -35,7 +40,7 @@ await boardsStore.getAllBoards()
 const columns: Ref<OrderList> = ref([...sortedActiveBoardColumns.value])
 
 watch(
-  () => activeBoard.value,
+  () => sortedActiveBoardColumns.value,
   async () => {
     columns.value = sortedActiveBoardColumns.value
   },
@@ -48,12 +53,9 @@ const handleUpdateTasks = debounce(() => {
   if (payload.length) {
     boardsStore.updateTasksOrder(payload)
   }
-}, 1000)
+}, 300)
 
 const handleUpdateOrder = (type: string) => {
-  if (isEdited.value) {
-    return
-  }
   if (type === 'column') {
     const payload = orderColumns(columns.value as ColumnDto[])
     boardsStore.updateBoardColumnsOrder(payload)
@@ -63,7 +65,7 @@ const handleUpdateOrder = (type: string) => {
 }
 
 const handleEditBoard = () => {
-  isEdited.value = true
+  editedBoardId.value = activeBoard.value?.id as number
   dialogs.value.upsertBoard = true
 }
 </script>
@@ -85,8 +87,9 @@ const handleEditBoard = () => {
     <div
       class="flex-1 flex flex-col justify-center items-start w-full max-h-screen">
       <TopBar @edit-board="handleEditBoard" />
-      <DialogsUpsertBoard v-model="dialogs.upsertBoard" :board="editedBoard" />
+      <DialogsUpsertBoard v-model="dialogs.upsertBoard" :board="draftBoard" />
       <DialogsDeleteBoard v-model="dialogs.deleteBoard" />
+      <DialogsCreateColumn v-model="dialogs.createColumn" />
 
       <div
         class="scroller flex flex-col items-start justify-start bg-gray-light dark:bg-black-dark h-3000px">

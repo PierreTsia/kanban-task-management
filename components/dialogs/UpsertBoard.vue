@@ -36,7 +36,13 @@ watch(
     if (board) {
       newBoard.name = board.name
       newBoard.columns = board.columns
+    } else {
+      newBoard.name = ''
+      newBoard.columns = [{ name: 'Todo' } as Partial<ColumnDto>]
     }
+  },
+  {
+    immediate: true,
   }
 )
 
@@ -114,7 +120,6 @@ const canAddNewColumn = computed(() => {
 
 <template>
   <BaseDialog
-    v-slot="{ modelValue }"
     :model-value="modelValue"
     :persistent="persistent"
     @update:model-value="(t) => $emit('update:modelValue', t)">
