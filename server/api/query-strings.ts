@@ -2,11 +2,7 @@ const PREVIOUS_AND_NEXT_IDS = `
     previous(id),
     next(id)
  `
-export const COLUMNS_QUERY = `
-        id,
-        name,
-        ${PREVIOUS_AND_NEXT_IDS},
-        tasks(
+export const TASKS_QUERY = `
             id,
             title,
             description,
@@ -16,7 +12,14 @@ export const COLUMNS_QUERY = `
                 id,
                 title,
                 is_completed
-            )
+            )`
+
+export const COLUMNS_QUERY = `
+        id,
+        name,
+        ${PREVIOUS_AND_NEXT_IDS},
+        tasks(
+           ${TASKS_QUERY}
         )
         `
 

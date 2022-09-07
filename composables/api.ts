@@ -1,3 +1,5 @@
+import type { CreateTaskPayload } from '~/server/api/tasks/create.post'
+
 interface PreviousNext<T> {
   previous: Partial<T> | null
   next: Partial<T> | null
@@ -53,6 +55,7 @@ interface BoardsComposition {
   deleteBoard: (id: number) => Promise<BoardDto[] | undefined>
   updateBoard: (id: number, p: any) => Promise<BoardDto>
   createNewColumn: (p: CreateColumnPayload) => Promise<ColumnDto[]>
+  createNewTask: (p: CreateTaskPayload) => Promise<TaskDto[]>
 }
 
 export type OrderListItem = TaskDto | ColumnDto
@@ -190,7 +193,7 @@ const useBoards = (): BoardsComposition => {
 
   const updateTasksOrder = async (payload: UpdateTaskOrderPayload[]) => {
     try {
-      const { data, error } = await $fetch('/api/update-tasks', {
+      const { data, error } = await $fetch('/api/tasks/update', {
         method: 'PUT',
         body: payload,
       })
@@ -223,6 +226,26 @@ const useBoards = (): BoardsComposition => {
     }
   }
 
+  const createNewTask = async (
+    payload: CreateTaskPayload
+  ): Promise<TaskDto[]> => {
+    try {
+      const { data, error } = await $fetch('/api/tasks/create', {
+        method: 'POST',
+        body: payload,
+      })
+
+      if (error) {
+        throw new Error(error.message)
+      } else {
+        return data ?? []
+      }
+    } catch (e) {
+      console.error(e)
+      return []
+    }
+  }
+
   return {
     fetchAllBoards,
     orderChainedList,
@@ -232,6 +255,7 @@ const useBoards = (): BoardsComposition => {
     deleteBoard,
     updateBoard,
     createNewColumn,
+    createNewTask,
   }
 }
 

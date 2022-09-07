@@ -8,7 +8,8 @@ import type {
   UpdateColumnOrderPayload,
   UpdateTaskOrderPayload,
 } from '~/composables/api'
-import { useApi } from '~/composables/api'
+import { isColumn, useApi } from '~/composables/api'
+import type { CreateTaskPayload } from '~/server/api/tasks/create.post'
 
 interface State {
   boards: BoardDto[]
@@ -77,6 +78,22 @@ export const useBoardsStore = defineStore('boards', {
       this.boards = this.boards.filter((b) => b.id !== id)
       this.activeBoardId = this.boards.length ? this.boards[0].id : null
     },
+
+    async createTask(payload: CreateTaskPayload) {
+      const { createNewTask } = useApi()
+      const [newTask] = await createNewTask(payload)
+      const boardIndex = this.boards.findIndex(
+        (b) => b.id === this.activeBoardId
+      )
+      if (boardIndex !== -1) {
+        const column = this.boards[boardIndex].columns.find(
+          (c) => c.id === payload.status
+        )
+        if (column) {
+          column.tasks = [...column.tasks, newTask]
+        }
+      }
+    },
   },
   getters: {
     activeBoard(): BoardDto | null {
@@ -98,6 +115,15 @@ export const useBoardsStore = defineStore('boards', {
             this.sortedActiveBoardColumns.length - 1
           ].id
         : null
+    },
+    lastTaskIdByColumn(): Record<number, number | null> {
+      return this.sortedActiveBoardColumns.reduce((acc, column) => {
+        acc[column.id] =
+          isColumn(column) && column.tasks.length
+            ? column.tasks[column.tasks.length - 1].id
+            : null
+        return acc
+      }, {} as Record<number, number | null>)
     },
     sortedTasksByColumnId() {
       const { orderChainedList } = useApi()

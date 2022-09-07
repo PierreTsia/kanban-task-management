@@ -8,8 +8,8 @@ interface State {
   dialogs: {
     upsertBoard: boolean
     createColumn: boolean
-    createTask: boolean
     deleteBoard: boolean
+    createTask: boolean
   }
 }
 

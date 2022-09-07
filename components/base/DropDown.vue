@@ -35,7 +35,7 @@ const toggleDropdown = () => {
 <template>
   <div class="flex flex-wrap">
     <div class="relative inline-flex align-middle w-full">
-      <div ref="activatorRef" class="cursor-pointer" @click="toggleDropdown">
+      <div ref="activatorRef" class="cursor-pointer w-full" @click="toggleDropdown">
         <slot name="activator" :activator-props="{ isVisible }" />
       </div>
       <div

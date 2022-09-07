@@ -72,6 +72,10 @@ const handleEditBoard = () => {
 
 <template>
   <div class="w-full flex justify-start relative">
+    <DialogsUpsertBoard v-model="dialogs.upsertBoard" :board="draftBoard" />
+    <DialogsDeleteBoard v-model="dialogs.deleteBoard" />
+    <DialogsCreateColumn v-model="dialogs.createColumn" />
+    <DialogsCreateTask v-model="dialogs.createTask" />
     <Transition name="slide-fade">
       <button
         v-show="!isSideBarOpen"
@@ -87,9 +91,6 @@ const handleEditBoard = () => {
     <div
       class="flex-1 flex flex-col justify-center items-start w-full max-h-screen">
       <TopBar @edit-board="handleEditBoard" />
-      <DialogsUpsertBoard v-model="dialogs.upsertBoard" :board="draftBoard" />
-      <DialogsDeleteBoard v-model="dialogs.deleteBoard" />
-      <DialogsCreateColumn v-model="dialogs.createColumn" />
 
       <div
         class="scroller flex flex-col items-start justify-start bg-gray-light dark:bg-black-dark h-3000px">

@@ -17,7 +17,9 @@ const { activeBoard } = storeToRefs(boardsStore)
     class="w-full h-96px flex justify-between items-center px-8 py-4 md:border-b-1 border-b-gray-light dark:border-b-black-light">
     <h1 class="heading heading-xl">{{ activeBoard?.name }}</h1>
     <section class="inline-flex items-center">
-      <button class="heading heading-md btn btn-lg btn-primary w-175px">
+      <button
+        class="heading heading-md btn btn-lg btn-primary w-175px"
+        @click="dialogs.createTask = true">
         <IconsPlus class="mr-1" />
         Create new task
       </button>
