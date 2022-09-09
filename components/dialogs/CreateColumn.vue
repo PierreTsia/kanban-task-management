@@ -78,21 +78,3 @@ const errorText = (value: string) => {
     </div>
   </BaseDialog>
 </template>
-
-<style>
-.list-enter-active,
-.list-leave-active {
-  transition: all 0.9s ease;
-}
-.list-enter-from {
-  opacity: 0;
-  transform: translateX(30px);
-}
-.list-leave-to {
-  opacity: 0;
-  transform: translateX(-30px);
-}
-.list-leave-active {
-  position: absolute;
-}
-</style>

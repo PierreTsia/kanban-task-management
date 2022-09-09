@@ -5,6 +5,7 @@ export interface CreateTaskPayload {
   title: string
   description: string
   status: number
+  board: number
   previous: number | null
   next: number | null
 }

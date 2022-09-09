@@ -10,6 +10,7 @@ interface State {
     createColumn: boolean
     deleteBoard: boolean
     createTask: boolean
+    editTask: boolean
   }
 }
 
@@ -27,6 +28,7 @@ export const useAppStore = defineStore('app', {
         createColumn: false,
         createTask: false,
         deleteBoard: false,
+        editTask: false,
       },
     }
   },

@@ -6,10 +6,8 @@ import type {
   OrderList,
   UpdateBoardPayload,
   UpdateColumnOrderPayload,
-  UpdateTaskOrderPayload,
 } from '~/composables/api'
-import { isColumn, useApi } from '~/composables/api'
-import type { CreateTaskPayload } from '~/server/api/tasks/create.post'
+import { useApi } from '~/composables/api'
 
 interface State {
   boards: BoardDto[]
@@ -68,10 +66,7 @@ export const useBoardsStore = defineStore('boards', {
       const { updateBoardColumnsOrder: updateOrder } = useApi()
       await updateOrder(payload)
     },
-    async updateTasksOrder(payload: UpdateTaskOrderPayload[]) {
-      const { updateTasksOrder: updateOrder } = useApi()
-      await updateOrder(payload)
-    },
+
     async deleteBoardById(id: number) {
       const { deleteBoard } = useApi()
       await deleteBoard(id)
@@ -79,26 +74,13 @@ export const useBoardsStore = defineStore('boards', {
       this.activeBoardId = this.boards.length ? this.boards[0].id : null
     },
 
-    async createTask(payload: CreateTaskPayload) {
-      const { createNewTask } = useApi()
-      const [newTask] = await createNewTask(payload)
-      const boardIndex = this.boards.findIndex(
-        (b) => b.id === this.activeBoardId
-      )
-      if (boardIndex !== -1) {
-        const column = this.boards[boardIndex].columns.find(
-          (c) => c.id === payload.status
-        )
-        if (column) {
-          column.tasks = [...column.tasks, newTask]
-        }
-      }
-    },
   },
   getters: {
     activeBoard(): BoardDto | null {
       return this.boards.find((b) => b.id === this.activeBoardId) ?? null
     },
+
+
     editedBoard(): BoardDto | null {
       return this.boards.find((b) => b.id === this.editedBoardId) ?? null
     },
@@ -115,24 +97,6 @@ export const useBoardsStore = defineStore('boards', {
             this.sortedActiveBoardColumns.length - 1
           ].id
         : null
-    },
-    lastTaskIdByColumn(): Record<number, number | null> {
-      return this.sortedActiveBoardColumns.reduce((acc, column) => {
-        acc[column.id] =
-          isColumn(column) && column.tasks.length
-            ? column.tasks[column.tasks.length - 1].id
-            : null
-        return acc
-      }, {} as Record<number, number | null>)
-    },
-    sortedTasksByColumnId() {
-      const { orderChainedList } = useApi()
-
-      return (columnId: number): OrderList => {
-        const column = this.activeBoard?.columns?.find((c) => c.id === columnId)
-
-        return orderChainedList(column?.tasks ?? [])
-      }
     },
   },
 })

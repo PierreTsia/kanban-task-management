@@ -24,9 +24,9 @@ const { activeBoard } = storeToRefs(boardsStore)
         Create new task
       </button>
 
-      <BoardContextualMenu
-        @delete-board="dialogs.deleteBoard = true"
-        @edit-board="$emit('editBoard')" />
+      <BaseContextualMenu
+        @delete="dialogs.deleteBoard = true"
+        @edit="$emit('editBoard')" />
     </section>
   </aside>
 </template>

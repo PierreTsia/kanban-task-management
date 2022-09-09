@@ -7,6 +7,7 @@ import { useAppStore } from '~/store/app.store'
 import { useBoardsStore } from '~/store/boards.store'
 import { useOrderedList } from '~/composables/orderedList'
 import type { ColumnDto, OrderList } from '~/composables/api'
+import { useTaskStore } from '~/store/tasks.store'
 
 const sideBar = ref(null)
 const { width } = useWindowSize()
@@ -18,6 +19,7 @@ const scrollZoneWidth = computed(
 )
 
 const boardsStore = useBoardsStore()
+const tasksStore = useTaskStore()
 const {
   activeBoard,
   activeBoardColumns,
@@ -51,7 +53,7 @@ const handleUpdateTasks = debounce(() => {
   const payload = orderTasks(columns.value)
 
   if (payload.length) {
-    boardsStore.updateTasksOrder(payload)
+    tasksStore.updateTasksOrder(payload)
   }
 }, 300)
 
@@ -76,6 +78,7 @@ const handleEditBoard = () => {
     <DialogsDeleteBoard v-model="dialogs.deleteBoard" />
     <DialogsCreateColumn v-model="dialogs.createColumn" />
     <DialogsCreateTask v-model="dialogs.createTask" />
+    <DialogsEditTask v-model="dialogs.editTask" />
     <Transition name="slide-fade">
       <button
         v-show="!isSideBarOpen"
@@ -152,5 +155,21 @@ const handleEditBoard = () => {
 
 .light .scroller::-webkit-scrollbar-track {
   background: #f4f7fd;
+}
+
+.list-enter-active,
+.list-leave-active {
+  transition: all 0.9s ease;
+}
+.list-enter-from {
+  opacity: 0;
+  transform: translateX(30px);
+}
+.list-leave-to {
+  opacity: 0;
+  transform: translateX(-30px);
+}
+.list-leave-active {
+  position: absolute;
 }
 </style>

@@ -3,7 +3,7 @@ import { storeToRefs } from 'pinia'
 import { useBoardsStore } from '~/store/boards.store'
 
 const boardsStore = useBoardsStore()
-const { sortedTasksByColumnId, activeBoardColumns } = storeToRefs(boardsStore)
+const { activeBoardColumns } = storeToRefs(boardsStore)
 
 await boardsStore.getAllBoards()
 </script>

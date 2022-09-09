@@ -52,6 +52,7 @@ export const useOrderedList = () => {
                 next: null,
                 description: t.description,
                 status: column.id as number,
+                board: activeBoard.value?.id as number,
               }
               if (i > 0) {
                 item.previous = tasks[i - 1].id as number

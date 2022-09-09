@@ -2,7 +2,7 @@
 import { storeToRefs } from 'pinia'
 import { useInputValidation } from '~/composables/inputValidation'
 import { useBoardsStore } from '~/store/boards.store'
-
+import { useTaskStore } from '~/store/tasks.store'
 
 withDefaults(defineProps<{ modelValue: boolean; persistent?: boolean }>(), {
   modelValue: false,
@@ -14,7 +14,9 @@ const emit = defineEmits<{
 }>()
 
 const boardsStore = useBoardsStore()
-const { activeBoardColumns, lastTaskIdByColumn } = storeToRefs(boardsStore)
+const taskStore = useTaskStore()
+const { activeBoardColumns, activeBoardId } = storeToRefs(boardsStore)
+const { lastTaskIdByColumn } = storeToRefs(taskStore)
 
 const newTask = reactive({
   name: '',
@@ -27,7 +29,6 @@ const newTask = reactive({
     },
   ],
 })
-
 
 const deleteSubtask = (index: number) => {
   if (newTask.subtasks.length <= 1) {
@@ -73,11 +74,12 @@ const handleCreateClick = () => {
     title: name,
     description,
     status,
-    previous: lastTaskIdByColumn.value[status], // todo
+    previous: lastTaskIdByColumn.value[status],
+    board: activeBoardId.value as number,
     next: null,
   }
 
-  boardsStore.createTask(payload)
+  taskStore.createTask(payload)
   emit('update:modelValue', false)
 }
 </script>
@@ -179,21 +181,3 @@ const handleCreateClick = () => {
     </div>
   </BaseDialog>
 </template>
-
-<style>
-.list-enter-active,
-.list-leave-active {
-  transition: all 0.9s ease;
-}
-.list-enter-from {
-  opacity: 0;
-  transform: translateX(30px);
-}
-.list-leave-to {
-  opacity: 0;
-  transform: translateX(-30px);
-}
-.list-leave-active {
-  position: absolute;
-}
-</style>
